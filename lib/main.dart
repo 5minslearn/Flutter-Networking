@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:url_launcher/url_launcher.dart';
 
 void main() {
   runApp(const MyApp());
@@ -51,6 +52,14 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,7 +75,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 itemBuilder: (context, index) {
                   final resource = _resources[index];
                   return InkWell(
-                      onTap: () => {},
+                      onTap: () => {_launchURL(resource['url'])},
                       child: Card(
                           child: ListTile(
                         title: Text(resource['description']),
